@@ -1,4 +1,3 @@
-Initial Commit test
 # -*- coding: utf-8 -*-
 directions =  "This game is like regular tic-tac-toe but with a twist. Each position inside the tic-tac-toe board is another tic-tac-toe board, so in order to win, you have to win 3 boards in a row. There’s more to it than that though. When you play on a board, the position on the inner board that you play on, corresponds to the board that the other person must play on next. Thereby making the game much more strategic! On top of this, you can send someone to a board that has already been one, but once it has been one it cannot be taken. Another catch is if you send someone to a board that is full, they can then choose to play on any board they want." 
 
@@ -82,6 +81,23 @@ def grabPosition(test):
 		return 7
 	if test == "LR":
 		return 8
+
+def testLargeBoardWon():
+	mid = wins[4]
+	if(wins[4] != 0):
+		if(mid == wins[1] and mid == wins[7]) or (mid == wins[3] and mid == wins[5]) or (mid == wins[0] and mid == wins[8]) or (mid == wins[2] and mid == wins[6]):
+			return 1
+	if(wins[1] !=0 and wins[1] ==  wins[2] and wins[1] == wins[0]):
+		return 1
+	if(wins[6] !=0 and wins[6] == wins[7] and wins[6] == wins[8]):
+		return 1
+	if(wins[3] !=0 and wins[3] == wins[0] and wins[3] == wins[6]):
+		return 1
+	if(wins[5] !=0 and wins[5] == wins[2] and wins[5] == wins[8]):
+		return true
+	return 0
+
+
 def testSmallBoardWon(pos, player):
 	mid = board[pos][4]
 	if(wins[pos] !=0):
@@ -229,7 +245,11 @@ while(1):
 		printBoard()
 		if(wins[tempPos]!=0):
 			print("Player " + str(player) + " wins the board")
+		if(testLargeBoardWon()):
+			print("Player " + str(player) + " wins the game")
+			break
 		player = switchPlayer(player)
+		
 	
 
 
