@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from random import randint
+
 directions =  "This game is like regular tic-tac-toe but with a twist. Each position inside the tic-tac-toe board is another tic-tac-toe board, so in order to win, you have to win 3 boards in a row. There’s more to it than that though. When you play on a board, the position on the inner board that you play on, corresponds to the board that the other person must play on next. Thereby making the game much more strategic! On top of this, you can send someone to a board that has already been one, but once it has been one it cannot be taken. Another catch is if you send someone to a board that is full, they can then choose to play on any board they want." 
 
 print directions
@@ -9,8 +11,20 @@ print ""
 print "As an example, player one could enter UL LL to play in the upper left board, lower left position in that board. Then player 2 could simply enter MR to play in the middle right and the game would go from there."
 
 print ""
+print "Once a board has been one, the three in a row will be marked by OO for player 2 and XX for player 1"
+print ""
 
-input = raw_input("Once you understand the directions Press Enter to Play")
+input = raw_input("Once you understand the directions, enter 2 for a 2 player game, or 1 for a solo game against a computer:   ")
+
+gameType = "undefined"
+
+while(gameType == "undefined"):
+	input = raw_input("Invalid: please enter a 1 or 2:   ")
+	if(input == "1"):
+		gameType = "solo"
+	if(input == "2"):
+		gameType = "2player"
+
 
 board = []
 for i in range(0,9):
@@ -81,6 +95,28 @@ def grabPosition(test):
 		return 7
 	if test == "LR":
 		return 8
+	else:
+		return -1
+
+def grabLocation(test):
+	if(test==0):
+		return "UL"
+	if(test==1):
+		return "UM"
+	if(test==2):
+		return "UL"
+	if(test==3):
+		return "ML"
+	if(test==4):
+		return "MM"
+	if(test==5):
+		return "MR"
+	if(test==6):
+		return "LL"
+	if(test==7):
+		return "LM"
+	if(test==8):
+		return "LR"
 
 def testLargeBoardWon():
 	mid = wins[4]
@@ -222,35 +258,54 @@ while(1):
 	if(player ==1):
 		input = raw_input("Player 1 make your move in the " + location + " board:  ")
 		loc = grabPosition(input)
-		if(board[pos][loc] == "  "):
-			location = input
-			board[pos][loc] = "X "
-		else:
+		if(loc == -1):
 			validInput = 0;
-			print("Location is already taken")
-			
-	if(player == 2):
+			print("Invalid Input")
+		else:
+			if(board[pos][loc] == "  "):
+				location = input
+				board[pos][loc] = "X "
+			else:
+				validInput = 0;
+				print("Location is already taken")
+		
+	if(player == 2 and gameType == "2player"):
 		input = raw_input("Player 2 make your move in the " + location + " board:  ")
 		loc = grabPosition(input)
+		if(loc == -1):
+			validInput = 0;
+			print("Invalid Input")
+		else:
+			if(board[pos][loc] == "  "):
+				location = input
+				board[pos][loc] = "O "
+			else:
+				validInput = 0;
+				print("Location is already taken")
+	if(player==2 and gameType == "solo"):
+		loc = randint(0,8)
 		if(board[pos][loc] == "  "):
-			location = input
+			location = grabLocation(loc)
 			board[pos][loc] = "O "
+			print ""
+			print ""
 		else:
 			validInput = 0;
-			print("Location is already taken")
 	if(validInput):
+		previousWinsValue = wins[pos]
 		testSmallBoardWon(pos, player)
 		tempPos = pos;
 		pos = loc
 		printBoard()
-		if(wins[tempPos]!=0):
+		if(wins[tempPos]!=0 and previousWinsValue == 0):
 			print("Player " + str(player) + " wins the board")
 		if(testLargeBoardWon()):
 			print("Player " + str(player) + " wins the game")
 			break
 		player = switchPlayer(player)
-		
-	
+
+
+
 
 
 
