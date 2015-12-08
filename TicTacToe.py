@@ -254,6 +254,14 @@ boardPos = input[0:2]
 pos = grabPosition(boardPos)
 location = input[3:5]
 loc = grabPosition(location)
+while(loc==-1 or pos==-1):
+	print("Invalid input")
+	print("")
+	input = raw_input("Player one make the first move (board followed by a space followed by position)")
+	boardPos = input[0:2]
+	pos = grabPosition(boardPos)
+	location = input[3:5]
+	loc = grabPosition(location)
 board[pos][loc] = "X "
 pos = loc;
 printBoard()
