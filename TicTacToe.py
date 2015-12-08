@@ -19,11 +19,12 @@ input = raw_input("Once you understand the directions, enter 2 for a 2 player ga
 gameType = "undefined"
 
 while(gameType == "undefined"):
-	input = raw_input("Invalid: please enter a 1 or 2:   ")
 	if(input == "1"):
 		gameType = "solo"
 	if(input == "2"):
 		gameType = "2player"
+	if(gameType == "undefined"):
+		input = raw_input("Invalid: please enter a 1 or 2:   ")
 
 
 board = []
@@ -100,23 +101,30 @@ def grabPosition(test):
 
 def grabLocation(test):
 	if(test==0):
-		return "UL"
+		return "Upper Left"
 	if(test==1):
-		return "UM"
+		return "Upper Mid"
 	if(test==2):
-		return "UL"
+		return "Upper Right"
 	if(test==3):
-		return "ML"
+		return "Middle Left"
 	if(test==4):
-		return "MM"
+		return "Middle"
 	if(test==5):
-		return "MR"
+		return "Middle Right"
 	if(test==6):
-		return "LL"
+		return "Lower left"
 	if(test==7):
-		return "LM"
+		return "Lower mid"
 	if(test==8):
-		return "LR"
+		return "Lower right"
+	return "NONE"
+
+def testIfFull(pos):
+	if(board[pos][0] != "  " and board[pos][1] != "  " and board[pos][2] != "  " and board[pos][3] != "  " and board[pos][4] != "  " and board[pos][5] != "  " and board[pos][6] != "  " and board[pos][7] != "  " and board[pos][8] != "  "):
+		return 1
+	return 0
+
 
 def testLargeBoardWon():
 	mid = wins[4]
@@ -130,7 +138,7 @@ def testLargeBoardWon():
 	if(wins[3] !=0 and wins[3] == wins[0] and wins[3] == wins[6]):
 		return 1
 	if(wins[5] !=0 and wins[5] == wins[2] and wins[5] == wins[8]):
-		return true
+		return 1
 	return 0
 
 
@@ -256,8 +264,15 @@ while(1):
 	global location
 	validInput = 1;
 	if(player ==1):
-		input = raw_input("Player 1 make your move in the " + location + " board:  ")
-		loc = grabPosition(input)
+		if(testIfFull(pos)):
+			input = raw_input("PLayer one make your move (board followed by location)")
+			boardPos = input[0:2]
+			pos = grabPosition(boardPos)
+			location = input[3:5]
+			loc = grabPosition(location)
+		else:
+			input = raw_input("Player 1 make your move in the " + grabLocation(pos) + " board:  ")
+			loc = grabPosition(input)
 		if(loc == -1):
 			validInput = 0;
 			print("Invalid Input")
@@ -270,8 +285,15 @@ while(1):
 				print("Location is already taken")
 		
 	if(player == 2 and gameType == "2player"):
-		input = raw_input("Player 2 make your move in the " + location + " board:  ")
-		loc = grabPosition(input)
+		if(testIfFull(pos)):
+			input = raw_input("PLayer one make your move (board followed by location)")
+			boardPos = input[0:2]
+			pos = grabPosition(boardPos)
+			location = input[3:5]
+			loc = grabPosition(location)
+		else:
+			input = raw_input("Player 2 make your move in the " + grabLocation(pos) + " board:  ")
+			loc = grabPosition(input)
 		if(loc == -1):
 			validInput = 0;
 			print("Invalid Input")
@@ -283,9 +305,14 @@ while(1):
 				validInput = 0;
 				print("Location is already taken")
 	if(player==2 and gameType == "solo"):
+		if(testIfFull(pos)):
+			newPos = pos
+			pos = randint(0,8)
+			while(pos == newPos):
+				pos = randint(0,8)
 		loc = randint(0,8)
 		if(board[pos][loc] == "  "):
-			location = grabLocation(loc)
+			location = grabLocation(pos)
 			board[pos][loc] = "O "
 			print ""
 			print ""
